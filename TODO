@@ -1,0 +1,13 @@
+TODO:
+* Where is the UI for this new catalog?
+* Test creating the *.zip file (see calibre-mendeley-plugin)
+* Rename the git repository to have "calibre" in the name
+* Write README
+* License
+
+* For different templated files:
+1.- On generate the plugin: create a file with the list of files in templates/* (with subdirs!)
+2.- When reading: open the list of files
+3.- Then load the files in that list of files
+4.- Parse each file there?
+
