@@ -10,7 +10,7 @@ from calibre.gui2 import gprefs
 from calibre.gui2.ui import get_gui
 from PyQt5.Qt import QWidget, QListWidgetItem, Qt, QVBoxLayout, QLabel, QListWidget
 
-class VirtualShelfUi(QWidget):
+class PluginWidget(QWidget):
     TITLE = _('HTML Virtual Shelf options')
     HELP  = _('Options specific to Virtual Shelf plugin')
     sync_enabled = False
@@ -19,23 +19,14 @@ class VirtualShelfUi(QWidget):
     def __init__(self, parent=None):
         QWidget.__init__(self, parent)
         self.l = l = QVBoxLayout(self)
-        self.la = la = QLabel(_('Fields to include in output:'))
+        self.la = la = QLabel(_("This plugin doesn't need any configuration"))
         la.setWordWrap(True)
         l.addWidget(la)
-        self.db_fields = QListWidget(self)
-        l.addWidget(self.db_fields)
-        self.la2 = la = QLabel(_('Drag and drop to re-arrange fields'))
-        l.addWidget(la)
-        self.db_fields.setDragEnabled(True)
-        self.db_fields.setDragDropMode(QListWidget.InternalMove)
-        self.db_fields.setDefaultDropAction(Qt.MoveAction)
-        self.db_fields.setAlternatingRowColors(True)
-        self.db_fields.setObjectName("db_fields")
 
-
-    def initialize(self, catalog_name, db):
+    def initialize(self, catalog_name):
         print "def Virtual Shelf initialize"
 
     def options(self):
         print "def Virtual Shelf options"
+        return list()
 

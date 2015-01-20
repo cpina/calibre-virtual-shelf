@@ -1,5 +1,6 @@
 import os
 from calibre.customize import CatalogPlugin
+from calibre.customize.conversion import DummyReporter
 
 class VirtualShelfPlugin(CatalogPlugin):
     name                = 'VirtualShelfPlugin'
@@ -13,7 +14,7 @@ class VirtualShelfPlugin(CatalogPlugin):
 
     actual_plugin = 'calibre_plugins.virtual_shelf.ui:virtual_shelf_plugin'
 
-    def run(self, path_to_output, opts, db, Notification=None):
+    def run(self, path_to_output, opts, db, notification=DummyReporter()):
         import pystache
         file = open(path_to_output, 'w')
 
