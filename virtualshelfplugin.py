@@ -8,7 +8,7 @@ __docformat__ = 'restructuredtext en'
 
 from calibre.gui2 import gprefs
 from calibre.gui2.ui import get_gui
-from PyQt5.Qt import QWidget, QListWidgetItem, Qt, QVBoxLayout, QLabel, QListWidget
+from PyQt5.Qt import QWidget, Qt, QHBoxLayout, QLabel, QListWidget, QLineEdit
 
 class PluginWidget(QWidget):
     TITLE = _('HTML Virtual Shelf options')
@@ -18,15 +18,19 @@ class PluginWidget(QWidget):
 
     def __init__(self, parent=None):
         QWidget.__init__(self, parent)
-        self.l = l = QVBoxLayout(self)
-        self.la = la = QLabel(_("This plugin doesn't need any configuration"))
-        la.setWordWrap(True)
-        l.addWidget(la)
+
+        self.layout = QHBoxLayout(self)
+        label = QLabel(_("Output directory"))
+        self.pathEdit = QLineEdit()
+
+        self.pathEdit.setText("/home/carles/virtual-shelf")
+
+        self.layout.addWidget(label)
+        self.layout.addWidget(self.pathEdit)
 
     def initialize(self, catalog_name):
         print "def Virtual Shelf initialize"
 
     def options(self):
-        print "def Virtual Shelf options"
-        return list()
+        return { 'output_directory': self.pathEdit.text() }
 

@@ -13,13 +13,16 @@
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <layout class="QGridLayout" name="gridLayout">
-   <item row="0" column="0">
+  <layout class="QHBoxLayout" name="horizontalLayout">
+   <item>
     <widget class="QLabel" name="label_5">
      <property name="text">
-      <string>This plugin doesn't need any configuration</string>
+      <string>Content output:</string>
      </property>
     </widget>
+   </item>
+   <item>
+    <widget class="QLineEdit" name="outputPath"/>
    </item>
   </layout>
  </widget>

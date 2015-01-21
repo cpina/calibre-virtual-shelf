@@ -1,4 +1,5 @@
 import os
+import shutil
 from calibre.customize import CatalogPlugin
 from calibre.customize.conversion import DummyReporter
 
@@ -16,16 +17,49 @@ class VirtualShelfPlugin(CatalogPlugin):
 
     def run(self, path_to_output, opts, db, notification=DummyReporter()):
         import pystache
-        file = open(path_to_output, 'w')
 
         opts.sort_by="author"
 
-        data = self.search_sort_db(db, opts)
+        books = self.search_sort_db(db, opts)
 
+        log = open("/home/carles/virtual-shelf.log","w")
+        log.write(str(books) + "\n")
+
+        opts_dir = vars(opts)
+        output_directory = opts_dir['output_directory']
+
+        file = open(path_to_output, 'w')
+        file.write("See the output in " + output_directory)
+        file.write("Calibre natively only supports one catalogue output file")
+        file.write("but this plugin needs a few.")
+        file.close()
+
+        if not os.path.exists(output_directory):
+            os.makedirs(output_directory)
+
+
+        # Main template
         index_moustache = "templates/index.moustache"
-        templates = self.load_resources([index_moustache])
+        list_of_files = "list_of_files.txt"
 
-        for entry in data:
-            file.write(pystache.render(templates[index_moustache], entry)+"\n")
+        templates = self.load_resources([index_moustache, list_of_files])
+
+        file = open(output_directory + "/index.html", 'w')
+        file.write(pystache.render(templates[index_moustache], {'books': books}))
+        file.close()
+
+        # Copy over other files
+        list_of_files = templates[list_of_files].split("\n")
+
+        all_files = self.load_resources(list_of_files)
+
+        for file_name in list_of_files:
+            if file_name == 'templates/index.moustache' or file_name == "":
+                continue
+
+            file_name_output = os.path.basename(file_name)
+            file = open(output_directory + "/" + file_name_output, "wb")
+            file.write(all_files[file_name])
+            file.close()
 
         self.notification = notification
