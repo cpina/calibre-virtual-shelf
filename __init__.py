@@ -22,12 +22,16 @@ class VirtualShelfPlugin(CatalogPlugin):
 
         data = self.search_sort_db(db, opts)
 
+        f = open("/home/carles/virtual.log", "a")
+
         index_moustache = "templates/index.moustache"
         templates = self.load_resources([index_moustache])
-        print templates
+        f.write("here01")
 
         for entry in data:
             print pystache.render(templates[index_moustache], entry)
+            f.write(pystache.render(templates[index_moustache], entry)+"\n")
             break
 
-        return path_to_output
+        self.notification = notification
+        #return path_to_output
