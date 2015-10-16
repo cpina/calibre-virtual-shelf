@@ -22,6 +22,8 @@ class VirtualShelfPlugin(CatalogPlugin):
 
         books = self.search_sort_db(db, opts)
 
+        books = self.prepare_books(books)
+
         log = open("/home/carles/virtual-shelf.log","w")
         log.write(str(books) + "\n")
 
@@ -46,7 +48,6 @@ class VirtualShelfPlugin(CatalogPlugin):
 
         if not os.path.exists(output_directory):
             os.makedirs(output_directory)
-
 
         # Main template
         index_moustache = "templates/index.moustache"
@@ -73,3 +74,11 @@ class VirtualShelfPlugin(CatalogPlugin):
             file.close()
 
         self.notification = notification
+
+    def prepare_books(self, books):
+        i = 1
+        for book in books:
+            book['author_display'] = " ".join(book['authors'])
+            i+=1
+
+        return books
