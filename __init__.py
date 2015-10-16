@@ -8,7 +8,7 @@ class VirtualShelfPlugin(CatalogPlugin):
     description         = 'Generates an HTML like a traditional shelf'
     supported_platforms = ['windows', 'osx', 'linux']
     author              = 'Carles Pina i Estany'
-    version             = (0, 0, 1)
+    version             = (0, 0, 2)
     file_types          = set(['html'])
     cli_options         = []
     minimum_calibre_version = (0, 7, 53)
@@ -26,7 +26,17 @@ class VirtualShelfPlugin(CatalogPlugin):
         log.write(str(books) + "\n")
 
         opts_dir = vars(opts)
-        output_directory = opts_dir['output_directory']
+        if 'output_directory' in opts_dir:
+            print "here here 01"
+            output_directory = opts_dir['output_directory']
+        else:
+            print "here here 02"
+            output_directory = path_to_output
+            output_directory = output_directory.replace(".html", "")
+
+        path_to_output = output_directory + "/index.html"
+
+        print "path_to_output:",path_to_output
 
         file = open(path_to_output, 'w')
         file.write("See the output in " + output_directory)
