@@ -49,19 +49,40 @@ class VirtualShelfPlugin(CatalogPlugin):
         if not os.path.exists(output_directory):
             os.makedirs(output_directory)
 
+        covers_directory = output_directory + "/covers"
+        if not os.path.exists(output_directory + "/covers"):
+            os.makedirs(covers_directory)
+
         # Templates
         list_of_files = self.load_resources(["list_of_files.txt"])['list_of_files.txt']
 
         resources = self.load_resources(list_of_files.split("\n"))
 
         for file_name in resources.keys():
-            print file_name
             file_name_output = os.path.basename(file_name)
             file = open(output_directory + "/" + file_name_output, "wb")
-            file.write(pystache.render(resources[file_name], {'books': books}))
+            
+            if not file_name_output.endswith(".png"):
+                output = pystache.render(resources[file_name], {'books': books})
+            else:
+                output = resources[file_name]
+
+            file.write(output)
             file.close()
 
+        # Generate covers
+        for book in books:
+            cover_path = book['cover']
+
+            if cover_path is not None:
+                file_name_output = book['uuid'] + "." + self.file_extension(cover_path)
+                shutil.copyfile(cover_path, covers_directory + "/" + file_name_output)
+
         self.notification = notification
+
+    def file_extension(self, file_path):
+        filename, file_extension = os.path.splitext(file_path)
+        return file_extension.lstrip(".")
 
     def prepare_books(self, books):
         index = 0
@@ -71,6 +92,11 @@ class VirtualShelfPlugin(CatalogPlugin):
             # this uuid is to as a css selector and should not start with
             # a number
             book['uuid-no-dashes'] = 'a'+book['uuid'].replace("-", "")
+
+            if book['cover'] is not None:
+                book['cover-file'] = book['uuid'] + "." + self.file_extension(book['cover'])
+            else:
+                book['cover-file'] = ""
 
             book['z-index'] = index
             book['left'] = index*80
