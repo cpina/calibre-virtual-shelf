@@ -49,28 +49,16 @@ class VirtualShelfPlugin(CatalogPlugin):
         if not os.path.exists(output_directory):
             os.makedirs(output_directory)
 
-        # Main template
-        index_moustache = "templates/index.moustache"
-        list_of_files = "list_of_files.txt"
+        # Templates
+        list_of_files = self.load_resources(["list_of_files.txt"])['list_of_files.txt']
 
-        templates = self.load_resources([index_moustache, list_of_files])
+        resources = self.load_resources(list_of_files.split("\n"))
 
-        file = open(output_directory + "/index.html", 'w')
-        file.write(pystache.render(templates[index_moustache], {'books': books}))
-        file.close()
-
-        # Copy over other files
-        list_of_files = templates[list_of_files].split("\n")
-
-        all_files = self.load_resources(list_of_files)
-
-        for file_name in list_of_files:
-            if file_name == 'templates/index.moustache' or file_name == "":
-                continue
-
+        for file_name in resources.keys():
+            print file_name
             file_name_output = os.path.basename(file_name)
             file = open(output_directory + "/" + file_name_output, "wb")
-            file.write(all_files[file_name])
+            file.write(pystache.render(resources[file_name], {'books': books}))
             file.close()
 
         self.notification = notification
