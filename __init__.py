@@ -76,9 +76,7 @@ class VirtualShelfPlugin(CatalogPlugin):
         self.notification = notification
 
     def prepare_books(self, books):
-        i = 1
         for book in books:
             book['author_display'] = " ".join(book['authors'])
-            i+=1
 
-        return books
+        return books[0:5]

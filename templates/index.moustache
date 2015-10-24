@@ -1,13 +1,26 @@
-<head>
- <meta charset="UTF-8">
-</head>
+<!doctype html>
+<html>
+	<head>
+		<title>CSS Bookshelf</title>
+		<link rel="stylesheet" href="bookshelf.css"> 
+	</head>
+	<body>
+		<h1>CSS Bookshelf</h1>
+		<p>The books on my shelf. Uses <a href="https://github.com/steveworkman/cssbookshelf">cssbookshelf</a> and <a href="https://github.com/cpina/calibre-virtual-shelf">calibre-virtual-shelf</a>.
+		<dl class="bookshelf">
+			{{#books}}
 
-<body>
-Virtual Shelf
 
-{{#books}}
-<h1>{{title}}</h1>
-{{author_display}}
-{{/books}}
+			<dt class="{{uuid}}"><span>{{title}}</span></dt>
+			<dd class="{{uuid}}"><a class="amazonLink" href="http://www.amazon.co.uk/CSS-Mastery-Advanced-Standards-Solutions/dp/1590596145%3FSubscriptionId%3DAKIAJCFYSPA5V4ZSCM6Q%26tag%3Dstevwork-21%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D1590596145"><img src="http://ecx.images-amazon.com/images/I/4153AtAlT9L._SL160_.jpg" alt=""></a><br>
+			<strong>{{title}}</strong> by {{author_display}}.<br>
+			<a class="publisherLink" href="http://www.cssmastery.com/">Visit the CSS Mastery web site</a></dd>
 
-</body>
+
+			{{/books}}
+		</dl>
+
+		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+		<script type="text/javascript" src="bookshelf.js"></script>
+	</body>
+</html>
