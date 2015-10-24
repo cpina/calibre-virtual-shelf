@@ -64,7 +64,16 @@ class VirtualShelfPlugin(CatalogPlugin):
         self.notification = notification
 
     def prepare_books(self, books):
+        index = 0
         for book in books:
             book['author_display'] = " ".join(book['authors'])
+
+            # this uuid is to as a css selector and should not start with
+            # a number
+            book['uuid-no-dashes'] = 'a'+book['uuid'].replace("-", "")
+
+            book['z-index'] = index
+            book['left'] = index*80
+            index += 1
 
         return books[0:5]
