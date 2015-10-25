@@ -72,9 +72,13 @@ class VirtualShelfPlugin(CatalogPlugin):
             cover_path = book['cover']
 
             if cover_path is not None:
-                file_name_output = book['uuid'] + "." + self.file_extension(cover_path)
-                self.resize(cover_path, covers_directory + "/" + file_name_output)
+                file_name_output = covers_directory + "/" + book['uuid'] + "." + self.file_extension(cover_path)
+                file_name_spine_output = covers_directory + "/" + book['uuid'] + "-spine" + "." + self.file_extension(cover_path)
+
+                self.resize(cover_path, file_name_output)
                 # shutil.copyfile(cover_path, covers_directory + "/" + file_name_output)
+                self.resize(cover_path, file_name_spine_output)
+                self.generate_spine(file_name_spine_output, file_name_spine_output)
 
         self.notification = notification
 
@@ -101,11 +105,26 @@ class VirtualShelfPlugin(CatalogPlugin):
 
             if book['cover'] is not None:
                 book['cover-file'] = book['uuid'] + "." + self.file_extension(book['cover'])
+                book['spine-file'] = book['uuid'] + "-spine." + self.file_extension(book['cover'])
             else:
                 book['cover-file'] = ""
+                book['spine-file'] = ""
 
             book['z-index'] = index
             book['left'] = index*80
             index += 1
 
         return books[0:5]
+
+    def generate_spine(self, cover_path, output_path):
+        size = (40, 300)
+        spine = Image.new("RGB", size)
+
+        cover = Image.open(cover_path)
+
+        for y in xrange(0, cover.size[1]):
+            color = cover.getpixel((0, y))
+            for x in xrange(0, spine.size[0]):
+                spine.putpixel((x, y), color)
+
+        spine.save(output_path)
