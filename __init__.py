@@ -2,12 +2,13 @@ import os
 import shutil
 from calibre.customize import CatalogPlugin
 from calibre.customize.conversion import DummyReporter
+from PIL import Image
 
 class VirtualShelfPlugin(CatalogPlugin):
     name                = 'VirtualShelfPlugin'
     description         = 'Generates an HTML like a traditional shelf'
     supported_platforms = ['windows', 'osx', 'linux']
-    author              = 'Carles Pina i Estany'
+    author              = 'Carles Pina i Estany <carles@pina.cat>'
     version             = (0, 0, 2)
     file_types          = set(['html'])
     cli_options         = []
@@ -29,16 +30,12 @@ class VirtualShelfPlugin(CatalogPlugin):
 
         opts_dir = vars(opts)
         if 'output_directory' in opts_dir:
-            print "here here 01"
             output_directory = opts_dir['output_directory']
         else:
-            print "here here 02"
             output_directory = path_to_output
             output_directory = output_directory.replace(".html", "")
 
         path_to_output = output_directory + "/index.html"
-
-        print "path_to_output:",path_to_output
 
         file = open(path_to_output, 'w')
         file.write("See the output in " + output_directory)
@@ -76,9 +73,18 @@ class VirtualShelfPlugin(CatalogPlugin):
 
             if cover_path is not None:
                 file_name_output = book['uuid'] + "." + self.file_extension(cover_path)
-                shutil.copyfile(cover_path, covers_directory + "/" + file_name_output)
+                self.resize(cover_path, covers_directory + "/" + file_name_output)
+                # shutil.copyfile(cover_path, covers_directory + "/" + file_name_output)
 
         self.notification = notification
+
+    def resize(self, original, destination):
+        im = Image.open(str(original))
+        size = im.size
+        new_height = 300.0
+        ratio = new_height / size[1]
+        im = im.resize((int(size[0]*ratio),int(size[1]*ratio)), Image.ANTIALIAS)
+        im.save(destination)
 
     def file_extension(self, file_path):
         filename, file_extension = os.path.splitext(file_path)
